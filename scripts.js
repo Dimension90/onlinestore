@@ -77,7 +77,7 @@ products.forEach((product) => {
     <h2>${product.name}</h2>
     <p>${product.description}</p>
     <p><strong>${product.price}&nbsp;₽</strong></p>
-    <button class="buy-button" data-product-id="${product.id}">Купить</button>
+    <button class="buy-button" data-product-id="${product.id}">Добавить в корзину</button>
   `;
   productsSection.appendChild(productDiv);
 });
@@ -94,5 +94,38 @@ loginButton.addEventListener('click', function() {
 registerButton.addEventListener('click', function() {
   registerModal.show();
 });
+
+$(document).ready(function() {
+  $('#login-form').submit(function(event) {
+    event.preventDefault();
+
+    $('.form-control').removeClass('error');
+    $('.auth-error-message').text('').removeClass('visible');
+
+    $.ajax({
+      url: 'login.php',
+      type: 'POST',
+      data: $(this).serialize(),
+      success: function(response) {
+        if (response.trim() === 'success') {
+          location.reload();
+        } else {
+          $('#login').addClass('error');
+          $('#password').addClass('error');
+
+          $('#loginModal .auth-error-message').text('Неверный логин или пароль').addClass('visible');
+
+          $('#loginModal .modal-content').css('height', 'auto');
+        }
+      },
+      error: function() {
+        console.log('Error occurred');
+      }
+    });
+  });
+});
+
+
+
 
 

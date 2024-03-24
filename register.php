@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'db_connect.php';
 
 $login = $_POST['login'];
@@ -13,7 +14,9 @@ $stmt = $conn->prepare($sql);
 $stmt->bind_param("ssssss", $login, $password, $full_name, $birthdate, $email, $phone);
 
 if ($stmt->execute()) {
-    header('Location: login.php');
+    $_SESSION['user_id'] = $conn->insert_id;
+    $_SESSION['username'] = $full_name;
+    header('Location: index.html');
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }

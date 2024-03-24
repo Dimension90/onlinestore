@@ -16,10 +16,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
-        header('Location: index.html');
-        exit();
+        $_SESSION['username'] = $user['full_name'];
+        echo 'success';
     } else {
-        $error = "Invalid login or password.";
+        echo 'error';
     }
+    
+    
 }
 ?>

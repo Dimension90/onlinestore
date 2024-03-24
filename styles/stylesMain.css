@@ -13,7 +13,7 @@ body {
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  background-color: #f1f1f1;
+  background-color: #ffffff;
 }
 
 header {
@@ -320,3 +320,21 @@ footer {
   text-decoration: none;
   color: #fff;
 }
+
+.form-control.error {
+  border-color: #dc3545;
+}
+
+.form-control.error:focus {
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.invalid-feedback {
+  color: #dc3545;
+}
+
+.auth-error-message {
+  color: #dc3545;
+  justify-content: center;
+}
+

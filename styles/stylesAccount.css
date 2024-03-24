@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f1f1f1;
+  }
+  
+  main {
+    flex: 1;
+    padding: 2rem;
+  }
+  
+  footer {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    width: 100%;
+  }
+  
+  header {
+    background-color: #333;
+    color: #a6a8ab;
+    padding: 1rem 0;
+  }
+  
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  header img {
+    margin-right: 1em;
+    width: 2.25em;
+    height: 2.25em;
+    margin-bottom: .55em;
+    vertical-align: middle;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+  
+  .header-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .header-buttons a {
+    color: white;
+    margin: 0 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    padding: 2px 6px;
+  }
+  
+  .header-buttons a:hover {
+    padding: 2px 6px;
+    background-color: #555 !important;
+  }
+  
+  .user-info,
+.user-stack {
+  padding: 1.5rem;
+  border-radius: 5px;
+  border: 1px solid #dee2e6;
+  margin-bottom: 2rem;
+}
+
+.user-info {
+  background-color: #f9f9f9;
+}
+
+.user-stack {
+  background-color: #f9f9f9;
+}
+
+.user-info h2,
+.user-stack h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.user-info-header-border {
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+  margin-bottom: 10px;
+  user-select: none
+}
+
+.user-info-header-border:hover {
+  background-color: #e9ecef;
+}
+
+.user-info p {
+  margin: 0;
+}
+
+.user-stack ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-stack li {
+  margin-bottom: 0.5rem;
+}
+
+.user-stack h3 {
+    position: relative;
+    padding-right: 30px;
+  }
+  
+  .user-stack h3 .collapse-icon {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: transform 0.3s ease;
+  }
+  
+  .user-stack h3 .collapse-show {
+    transform: translateY(-50%) rotate(-90deg);
+  }
+  
+
+  
