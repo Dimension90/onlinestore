@@ -66,21 +66,126 @@ const products = [
   },
 ];
 
-const productsSection = document.getElementById('products');
-const cart = [];
+const productsSection = document.getElementById("products");
+const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-products.forEach((product) => {
-  const productDiv = document.createElement('div');
-  productDiv.className = 'product';
-  productDiv.innerHTML = `
-    <img src="${product.image}" alt="${product.name}">
-    <h2>${product.name}</h2>
-    <p>${product.description}</p>
-    <p><strong>${product.price}&nbsp;₽</strong></p>
-    <button class="buy-button" data-product-id="${product.id}">Добавить в корзину</button>
+function renderProducts() {
+  productsSection.innerHTML = "";
+
+  products.forEach((product) => {
+    const productDiv = document.createElement("div");
+    productDiv.className = "product";
+    productDiv.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <h2>${product.name}</h2>
+      <p>${product.description}</p>
+      <p><strong>${product.price}&nbsp;₽</strong></p>
+      <button class="buy-button" data-product-id="${product.id}">Добавить в корзину</button>
+    `;
+    productsSection.appendChild(productDiv);
+  });
+
+  const buyButtons = document.querySelectorAll(".buy-button");
+  buyButtons.forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const productId = event.target.dataset.productId;
+      const product = products.find((product) => product.id === parseInt(productId));
+
+      if (!product.quantity) {
+        product.quantity = 1;
+        cart.push(product);
+      } else {
+        const cartItem = cart.find((item) => item.id === product.id);
+        cartItem.quantity++;
+      }
+
+      saveCartToLocalStorage();
+      updateCartCount();
+      renderCartItems();
+      openCartModal();
+    });
+  });
+}
+
+function saveCartToLocalStorage() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function updateCartCount() {
+  const cartCount = document.getElementById("cart-count");
+  cartCount.innerText = cart.reduce((total, product) => total + product.quantity, 0);
+}
+
+function renderCartItems() {
+  const cartItemsContainer = document.getElementById("cartItems");
+  cartItemsContainer.innerHTML = "";
+
+  let totalPrice = 0;
+
+  cart.forEach((product) => {
+    const cartItem = document.createElement("div");
+    cartItem.className = "cart-item";
+    cartItem.innerHTML = `
+      <img src="${product.image}" alt="${product.name}">
+      <div class="cart-item-info">
+        <h6>${product.name}</h6>
+        <div class="quantity-buttons">
+          <button class="btn btn-sm btn-secondary" data-action="decrease">-</button>
+          <span>${product.quantity}</span>
+          <button class="btn btn-sm btn-secondary" data-action="increase">+</button>
+        </div>
+        <p><strong>${product.price * product.quantity}&nbsp;₽</strong></p>
+      </div>
+    `;
+    cartItemsContainer.appendChild(cartItem);
+
+    const decreaseButton = cartItem.querySelector("[data-action='decrease']");
+    const increaseButton = cartItem.querySelector("[data-action='increase']");
+
+    decreaseButton.addEventListener("click", () => {
+      if (product.quantity > 1) {
+        product.quantity--;
+        saveCartToLocalStorage();
+        updateCartCount();
+        renderCartItems();
+      } else {
+        const index = cart.indexOf(product);
+        cart.splice(index, 1);
+        saveCartToLocalStorage();
+        updateCartCount();
+        renderCartItems();
+      }
+    });
+
+    increaseButton.addEventListener("click", () => {
+      product.quantity++;
+      saveCartToLocalStorage();
+      updateCartCount();
+      renderCartItems();
+    });
+
+    totalPrice += product.price * product.quantity;
+  });
+
+  const totalPriceElement = document.createElement("div");
+  totalPriceElement.className = "total-price";
+  totalPriceElement.innerHTML = `
+    <hr>
+    <p><strong>Итого: ${totalPrice}&nbsp;₽</strong></p>
   `;
-  productsSection.appendChild(productDiv);
-});
+  cartItemsContainer.appendChild(totalPriceElement);
+}
+
+function openCartModal() {
+  const cartModal = new bootstrap.Modal(document.getElementById("cartModal"));
+  cartModal.show();
+}
+
+renderProducts();
+updateCartCount();
+renderCartItems();
+
+document.getElementById("cart-icon").addEventListener("click", openCartModal);
 
 const loginButton = document.querySelector('.login-button');
 const registerButton = document.querySelector('#register-button');
@@ -124,8 +229,3 @@ $(document).ready(function() {
     });
   });
 });
-
-
-
-
-
