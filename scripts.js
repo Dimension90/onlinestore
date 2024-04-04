@@ -78,47 +78,59 @@ const products = [
 const productsSection = document.getElementById("products");
 const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-function renderProducts(productsToRender) {
-  productsSection.innerHTML = "";
+function renderProducts(products) {
+  $("#products").empty();
 
-  productsToRender.forEach((product) => {
-    const productDiv = document.createElement("div");
-    productDiv.className = "product";
-    productDiv.innerHTML = `
-      <img src="${product.image}" alt="${product.name}">
-      <h2>${product.name}</h2>
-      <p>${product.description}</p>
-      <p><strong>${product.price}&nbsp;₽</strong></p>
-      <button class="buy-button" data-product-id="${product.id}">Добавить в корзину</button>
+  $.each(products, function (index, product) {
+    var productHtml = `
+      <div class="product">
+        <img src="${product.image}" alt="${product.name}">
+        <h2>${product.name}</h2>
+        <p>${product.description}</p>
+        <p><strong>${product.price}&nbsp;₽</strong></p>
+        <button class="buy-button" data-product-id="${product.id}">Добавить в корзину</button>
+      </div>
     `;
-    productsSection.appendChild(productDiv);
+    $("#products").append(productHtml);
   });
 
-  const buyButtons = document.querySelectorAll(".buy-button");
-  buyButtons.forEach((button) => {
-    button.addEventListener("click", (event) => {
-      const productId = event.target.dataset.productId;
-      const product = products.find(
-        (product) => product.id === parseInt(productId)
-      );
-
-      if (!product.quantity) {
-        product.quantity = 1;
-        cart.push(product);
-      } else {
-        const cartItem = cart.find((item) => item.id === product.id);
-        cartItem.quantity++;
-      }
-
-      saveCartToLocalStorage();
-      updateCartCount();
-      renderCartItems();
-      openCartModal();
+  $(".buy-button").on("click", function () {
+    var productId = $(this).data("product-id");
+    var product = products.find(function (product) {
+      return product.id == productId;
     });
+    addToCart(product);
   });
 }
 
-renderProducts(products);
+function addToCart(product) {
+  if (!product.quantity) {
+    product.quantity = 1;
+    cart.push(product);
+  } else {
+    const cartItem = cart.find((item) => item.id === product.id);
+    cartItem.quantity++;
+  }
+
+  saveCartToLocalStorage();
+  updateCartCount();
+  renderCartItems();
+  openCartModal();
+}
+
+document.getElementById("search-form").addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const searchValue = document
+    .getElementById("search-input")
+    .value.trim()
+    .toLowerCase();
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchValue)
+  );
+
+  renderProducts(filteredProducts);
+});
 
 function saveCartToLocalStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));
@@ -197,7 +209,7 @@ function openCartModal() {
   cartModal.show();
 }
 
-renderProducts();
+renderProducts(products);
 updateCartCount();
 renderCartItems();
 
@@ -250,45 +262,29 @@ $(document).ready(function () {
   });
 });
 
-document
-  .getElementById("search-form")
-  .addEventListener("submit", async (event) => {
+$(document).ready(function () {
+  $("#search-form").on("submit", function (event) {
     event.preventDefault();
 
-    const searchInput = document.getElementById("search-input");
-    const searchLoader = document.getElementById("search-loader");
+    const searchUrl = "search.php";
 
-    // Показываем загрузчик
-    searchLoader.classList.remove("d-none");
+    $("#search-loader").removeClass("d-none");
 
-    const searchValue = searchInput.value.trim();
+    var searchValue = $("#search-input").val();
 
-    try {
-      const response = await fetch("search.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ searchValue }),
-      });
+    $.ajax({
+      url: searchUrl,
+      type: "POST",
+      data: { searchValue: searchValue },
+      success: function () {
+        $("#search-loader").addClass("d-none");
+      },
 
-      if (!response.ok) {
-        throw new Error("Ошибка сервера: " + response.status);
-      }
-
-      const filteredProducts = await response.json();
-      console.log("Filtered products:", filteredProducts); // Обновлена отладка
-
-      // Скрываем загрузчик
-      searchLoader.classList.add("d-none");
-
-      // Рендерим отфильтрованные товары
-      renderProducts(filteredProducts);
-    } catch (error) {
-      console.error(error);
-      // Скрываем загрузчик
-      searchLoader.classList.add("d-none");
-      // Отображаем сообщение об ошибке
-      alert("Произошла ошибка при поиске товаров. Попробуйте еще раз.");
-    }
+      error: function () {
+        alert("Произошла ошибка при поиске товаров. Попробуйте еще раз.");
+      },
+    });
   });
+
+  renderProducts(products);
+});

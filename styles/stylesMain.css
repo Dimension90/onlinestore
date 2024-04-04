@@ -387,14 +387,36 @@ footer {
   right: 5px;
 }
 
+.btn-outline-secondary {
+  border-color: #ced4da;
+  color: #868e96;
+}
+
+.btn-outline-secondary:hover {
+  border-color: #adb5bd;
+  color: #6c757d;
+}
+
+.btn-outline-secondary:focus,
+.btn-outline-secondary.focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
 .search-loader {
   display: flex;
-  justify-content: right;
-  align-items: right;
+  justify-content: center;
+  align-items: center;
   height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 9999;
 }
 
 .search-loader img {
-  width: 32px;
-  height: 32px;
+  width: 100px;
+  height: 100px;
 }
