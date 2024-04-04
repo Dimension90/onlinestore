@@ -32,7 +32,7 @@ header img {
   margin-right: 1em;
   width: 2.25em;
   height: 2.25em;
-  margin-bottom: .55em;
+  margin-bottom: 0.55em;
   vertical-align: middle;
 }
 
@@ -180,7 +180,7 @@ footer {
   padding: 0.5rem 1rem;
   margin: 0 0.5rem;
   text-decoration: none;
-  transition: background-color .3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .auth-buttons a:hover {
@@ -384,5 +384,17 @@ footer {
   padding: 0 5px;
   border-radius: 50%;
   font-size: 12px;
+  right: 5px;
 }
 
+.search-loader {
+  display: flex;
+  justify-content: right;
+  align-items: right;
+  height: 100%;
+}
+
+.search-loader img {
+  width: 32px;
+  height: 32px;
+}
